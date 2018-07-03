@@ -21,14 +21,13 @@ var Engine = (function(global) {
         lastTime;
 
     canvas.width = 505;
-    canvas.height = 606;
+    canvas.height = 707;
     doc.body.appendChild(canvas);
 
     /* 这个函数是整个游戏的主入口，负责适当的调用 update / render 函数 */
     function main() {
         /* 如果你想要更平滑的动画过度就需要获取时间间隙。因为每个人的电脑处理指令的
          * 速度是不一样的，我们需要一个对每个人都一样的常数（而不管他们的电脑有多快）
-         * 就问你屌不屌！
          */
         var now = Date.now(),
             dt = (now - lastTime) / 1000.0;
@@ -73,9 +72,13 @@ var Engine = (function(global) {
      */
     function updateEntities(dt) {
         allEnemies.forEach(function(enemy) {
+            enemy.updateOne();
             enemy.update(dt);
         });
-        player.update();
+          player.update();
+          //
+          player.checkCollisions();
+
     }
 
     /* 这个函数做了一些游戏的初始渲染，然后调用 renderEntities 函数。记住，这个函数
@@ -86,36 +89,37 @@ var Engine = (function(global) {
     function render() {
         /* 这个数组保存着游戏关卡的特有的行对应的图片相对路径。 */
         var rowImages = [
+                'images/block.png',         //增加空白行，避免玩家到达河流时出现“图像阴影”
                 'images/water-block.png',   // 这一行是河。
                 'images/stone-block.png',   // 第一行石头
                 'images/stone-block.png',   // 第二行石头
                 'images/stone-block.png',   // 第三行石头
                 'images/grass-block.png',   // 第一行草地
-                'images/grass-block.png'    // 第二行草地
+                'images/grass-block.png'   // 第二行草地
             ],
-            numRows = 6,
+            numRows = 7,
             numCols = 5,
             row, col;
 
-        /* 便利我们上面定义的行和列，用 rowImages 数组，在各自的各个位置绘制正确的图片 */
+        /* 遍历我们上面定义的行和列，用 rowImages 数组，在各自的各个位置绘制正确的图片 */
         for (row = 0; row < numRows; row++) {
             for (col = 0; col < numCols; col++) {
                 /* 这个 canvas 上下文的 drawImage 函数需要三个参数，第一个是需要绘制的图片
                  * 第二个和第三个分别是起始点的x和y坐标。我们用我们事先写好的资源管理工具来获取
                  * 我们需要的图片，这样我们可以享受缓存图片的好处，因为我们会反复的用到这些图片
                  */
-                ctx.drawImage(Resources.get(rowImages[row]), col * 101, row * 83);
+                ctx.drawImage(Resources.get(rowImages[row]), col * 101, row * 84 );
             }
         }
 
         renderEntities();
     }
 
-    /* 这个函数会在每个时间间隙被 render 函数调用。他的目的是分别调用你在 enemy 和 player
+    /* 这个函数会在每个时间间隙被 render 函数调用。它的目的是分别调用你在 enemy 和 player
      * 对象中定义的 render 方法。
      */
     function renderEntities() {
-        /* 遍历在 allEnemies 数组中存放的作于对象然后调用你事先定义的 render 函数 */
+        /* 遍历在 allEnemies 数组中存放的对象然后调用你事先定义的 render 函数 */
         allEnemies.forEach(function(enemy) {
             enemy.render();
         });
@@ -132,14 +136,15 @@ var Engine = (function(global) {
     }
 
     /* 紧接着我们来加载我们知道的需要来绘制我们游戏关卡的图片。然后把 init 方法设置为回调函数。
-     * 那么党这些图片都已经加载完毕的时候游戏就会开始。
+     * 那么当这些图片都已经加载完毕的时候游戏就会开始。
      */
     Resources.load([
         'images/stone-block.png',
         'images/water-block.png',
         'images/grass-block.png',
         'images/enemy-bug.png',
-        'images/char-boy.png'
+        'images/char-boy.png',
+        'images/block.png'
     ]);
     Resources.onReady(init);
 

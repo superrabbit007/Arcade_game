@@ -1,7 +1,7 @@
+街机游戏克隆项目
+============================
 
-前端纳米学位街机游戏克隆项目
-===============================
-
-学生应该用这个[评审标准](https://review.udacity.com/#!/rubrics/499/view))来自我检查自己提交的代码。 确认自己写的函数要是**面向对象的** -  要么是类函数（就像函数 Player 和 Enemy）要么是类的原型链上的函数比如 Enemy.prototype.checkCollisions ， 在类函数里面或者类的原型链函数里面适当的使用关键词 'this' 来引用调用该函数的对象实例。最后保证你的**readme.md**文件要写明关于如何运行和如何玩你的街机游戏的指引。
-
-关于如何开始这个项目的更详细的指导，可以查阅这份[指南](https://gdgdocs.org/document/d/1v01aScPjSWCCWQLIpFqvg3-vXLH2e8_SZQKC8jNO0Dc/pub?embedded=true)。
+游戏说明
+--
+>#### 这是一个通过键盘控制玩家躲避虫子的简单街机游戏,在浏览器中打开`index.html`游戏界面后，游戏自动开始运行,默认已选择玩家形象为char-boy。
+>#### 通过通过键盘中的_up,down,left,right(&uarr; , &darr; , &larr; , &rarr;)_ 键操作char-boy的行动，当玩家在躲避过程中被虫子触碰时，玩家位置重置_（重新从草地开始）_ , 当玩家成功到达河流时，游戏结束，可以在弹框中选择play again。
