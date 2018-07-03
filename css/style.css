@@ -1,8 +1,9 @@
 body {
     text-align: center;
+    visibility: visible;
 }
 
-#box {
+#pop-box {
   display: flex;
   flex-wrap: wrap;
   box-shadow: 5px 5px 10px 10px grey;
@@ -13,7 +14,7 @@ body {
   left: 40%;
   width: 400px;
   height: 300px;
-
+  background-color: slateblue
 }
 
 .message1 {
@@ -23,8 +24,11 @@ body {
   font-size: 1.5em;
 }
 
-.message2 {
-  width: 100%;
-  font-size: 1em;
+.play-button {
+  width: 200px;
+  height: 70px;
+  box-shadow: 5px 5px ;
+  margin: 3em 7.5em;
+  background-color: orange;
 
 }

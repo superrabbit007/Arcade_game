@@ -38,7 +38,7 @@
 class Enemy {
   constructor() {
     this.x = 0;
-    this.y = 65;
+    this.y = 149;
     this.speed = 100;
     this.sprite = 'images/enemy-bug.png';
   }
@@ -56,7 +56,7 @@ class Enemy {
   updateOne() {
       if (this.x>505) {
         this.x = 0;
-        this.y = 65 + 84*Math.floor(3*Math.random());
+        this.y = 149 + 84*Math.floor(3*Math.random());
         this.speed = Math.floor(100*Math.random())+100;
       }
   }
@@ -84,33 +84,24 @@ class Player {
   constructor() {
     this.sprite = 'images/char-boy.png';
     this.x = 101;
-    this.y = 378;
+    this.y = 462;
   }
 
 /**
 检测碰撞
 **/
   checkCollisions(dt) {
-    // console.log("update this.x:",this.x);
-    let charLoc = this;
-    // checkCollisions();
+    let charBoy = this;
     allEnemies.forEach (function(enemy) {
-      // console.log(charLoc.y, enemy['y']);
-    // console.log(Math.abs(charLoc.y - enemy['y']) <= 23);
-    let a1 = charLoc.x - enemy['x'];
-    let a2 = (Math.abs(a1)<=65);
-    let b1 = charLoc.y - enemy['y'];
-    let b2 = (Math.abs(b1) <= 50.5);
-    // let a = ((a2<=10) || (a1<=50));
-    // console.log(a1,b1);
-
-      // console.log(Math.abs(charLoc.x - enemy['x']) <= 10);
-      if (a2 && b2) {
-        console.log(charLoc['x'],charLoc['y']);
-
-        console.log(enemy['x'],enemy['y']);
-        charLoc.x = 0;
-        charLoc.y = 378;
+    //计算玩家和敌人之间的距离(xDiff,yDiff)，设置碰撞条件(xCond,yCond)
+    let xDiff = charBoy.x - enemy['x'];
+    let xCond = (Math.abs(xDiff)<=65);
+    let yDiff = charBoy.y - enemy['y'];
+    let yCond = (Math.abs(yDiff) <= 50.5);
+//当同时满足xCond,yCond,则玩家和敌人碰撞，重置玩家位置
+      if (xCond && yCond) {
+       charBoy.x = 0;
+       charBoy.y = 462;
       }
 
     });
@@ -118,29 +109,24 @@ class Player {
 
 
   update(dt) {
-    // console.log("test update");
 
   }
 
 
    render() {
     // console.log("test render");
-    // ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-
   }
 
-  // update1() {
-  //   let popBox1 = document.getElementsByClassName('message2');
-  //   popBox1[0].textContent = "Use ";
-  // }
 
 
 
-
+/**
+*@description 控制玩家行动，当玩家坐标为（x,42）时，即到达河流，此时出现游戏完成的弹框
+*@constructor
+**/
 
   handleInput(key) {
-    console.log(this.x,this.y);
       switch(key) {
       case 'left': this.x -=101;
       console.log(this.x);
@@ -156,21 +142,19 @@ class Player {
       break;
       default: console.log("Please press the control key!");
       }
-      console.log('test if ');
-      console.log(this.x,this.y);
+      //确保玩家不会走出游戏界面外（如果移动之后超出游戏界面，则立即重置玩家状态）
       var condition1 = (0 <= this.x && this.x <= 404);
-      var condition2 = (-42 <= this.y && this.y <= 415);
+      var condition2 = (42 <= this.y && this.y <= 462);
         if(condition1 && condition2) {
-          if (this.y === -42) {
-            let box = document.getElementById('box');
-            box.style.cssText = "visibility: visible";
-            // update1();
-            // console.log(box.nodeName);
+          if (this.y === 42) {
+            popBox.style.cssText = "visibility: visible";
+            //控制当页面弹框时，游戏界面不能点击(隐藏游戏界面)
+            gameShow[0].style.cssText = "visibility: hidden";
           }
 
         }else {
           this.x = 101;
-          this.y = 378;
+          this.y = 462;
           console.log(this.x,this.y);
 
         }
@@ -184,78 +168,47 @@ class Player {
 // 把所有敌人的对象都放进一个叫 allEnemies 的数组里面
 // 把玩家对象放进一个叫 player 的变量里面
 
-let player0 = new Player();
+let popBox = document.getElementById('pop-box');
+let gameShow = document.getElementsByTagName('body');
+let player = new Player();
 let allEnemies = [];
-let players = [];
 let enemy1 = new Enemy();
 let enemy2 = new Enemy();
 enemy2.x = 0;
-enemy2.y = 149;
-// enemy2.update = function(dt) {
-//   this.x += 200*dt;
-// }
+enemy2.y = 233;
+enemy2.update = function(dt) {
+  this.x += 200*dt;
+}
 let enemy3 = new Enemy();
-enemy3.y = 233;
+enemy3.y = 317;
+let enemy4 = new Enemy();
+enemy4.x = 50;
 
-allEnemies = [enemy1,enemy2,enemy3];
-
-
-let player1 = new Player();
-// player1.sprite = 'images/char-cat-girl.png';
-player1.x = 0;
-player1.y = 378;
-
-players = [player1,player0];
-console.log(player1.sprite);
-console.log(Player.render());
+//将enemy添加到数组中
+allEnemies = [enemy1,enemy2,enemy3,enemy4];
 
 
-// function enemyMove () {
-//   let allEnemies=allEnemies1.map(function (enemy) {
-//     let a1 = Math.random()*3;
-//     let a2 = Math.random()*300;
-//     let b1 = Math.floor(a1);
-//     let b2 = Math.floor(a2);
-//     enemy.y = 65 + b1*84;
-//     enemy.update = function(dt) {
-//       enemy.x = (b2 + 5000)*dt;
-//     }
-//     console.log(b1,b2);
-//     console.log(enemy.x,enemy.y);
-//     return enemy;
-//   });
-//   // console.log(allEnemies);
-//   return allEnemies;
-//
-// }
+/**
+*@description 重置玩家的位置以及敌人的位置，隐藏弹框，恢复游戏界面
+*@constructor
+**/
 
 function reset() {
-  // enemyMove();
-  player.x = 0;
-  player.y = 378;
+  player.x = 202;
+  player.y = 462;
+  allEnemies.forEach(function(enemy) {
+    enemy.x = 0;
+  });
+  popBox.style.cssText = "visibility: hidden";
+  gameShow[0].style.cssText = "visibility: visible";
 
-  // console.log();
 }
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// 这段代码监听游戏玩家的键盘点击事件并且代表将按键的关键数字送到 Player.handleInput()
-// 方法里面。你不需要再更改这段代码了。
+// 监听游戏玩家的键盘点击事件并且代表将按键的关键数字送到 Player.handleInput()
+// 方法里面。
 document.addEventListener('keyup', function(e) {
     var allowedKeys = {
         37: 'left',
@@ -263,9 +216,5 @@ document.addEventListener('keyup', function(e) {
         39: 'right',
         40: 'down'
     };
-    console.log(enemy1.x);
-    console.log('test key');
-    console.log(allowedKeys[e.keyCode]);
-    console.log(e.target.nodeName);
     player.handleInput(allowedKeys[e.keyCode]);
 });

@@ -21,7 +21,7 @@ var Engine = (function(global) {
         lastTime;
 
     canvas.width = 505;
-    canvas.height = 606;
+    canvas.height = 707;
     doc.body.appendChild(canvas);
 
     /* 这个函数是整个游戏的主入口，负责适当的调用 update / render 函数 */
@@ -71,15 +71,13 @@ var Engine = (function(global) {
      * 这些更新函数应该只聚焦于更新和对象相关的数据/属性。把重绘的工作交给 render 函数。
      */
     function updateEntities(dt) {
-        // enemyMove();
         allEnemies.forEach(function(enemy) {
             enemy.updateOne();
             enemy.update(dt);
         });
-        players.forEach(function(player) {
           player.update();
+          //
           player.checkCollisions();
-        })
 
     }
 
@@ -91,14 +89,15 @@ var Engine = (function(global) {
     function render() {
         /* 这个数组保存着游戏关卡的特有的行对应的图片相对路径。 */
         var rowImages = [
+                'images/block.png',         //增加空白行，避免玩家到达河流时出现“图像阴影”
                 'images/water-block.png',   // 这一行是河。
                 'images/stone-block.png',   // 第一行石头
                 'images/stone-block.png',   // 第二行石头
                 'images/stone-block.png',   // 第三行石头
                 'images/grass-block.png',   // 第一行草地
-                'images/grass-block.png'    // 第二行草地
+                'images/grass-block.png'   // 第二行草地
             ],
-            numRows = 6,
+            numRows = 7,
             numCols = 5,
             row, col;
 
@@ -125,12 +124,7 @@ var Engine = (function(global) {
             enemy.render();
         });
 
-        // player.render();
-        // players.forEach(function(player) {
-            player0.render();
-            player1.render();
-
-        // });
+        player.render();
     }
 
     /* 这个函数现在没干任何事，但是这会是一个好地方让你来处理游戏重置的逻辑。可能是一个
@@ -149,7 +143,8 @@ var Engine = (function(global) {
         'images/water-block.png',
         'images/grass-block.png',
         'images/enemy-bug.png',
-        'images/char-boy.png'
+        'images/char-boy.png',
+        'images/block.png'
     ]);
     Resources.onReady(init);
 
