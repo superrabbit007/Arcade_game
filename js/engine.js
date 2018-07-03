@@ -28,7 +28,6 @@ var Engine = (function(global) {
     function main() {
         /* 如果你想要更平滑的动画过度就需要获取时间间隙。因为每个人的电脑处理指令的
          * 速度是不一样的，我们需要一个对每个人都一样的常数（而不管他们的电脑有多快）
-         * 就问你屌不屌！
          */
         var now = Date.now(),
             dt = (now - lastTime) / 1000.0;
@@ -72,10 +71,16 @@ var Engine = (function(global) {
      * 这些更新函数应该只聚焦于更新和对象相关的数据/属性。把重绘的工作交给 render 函数。
      */
     function updateEntities(dt) {
+        // enemyMove();
         allEnemies.forEach(function(enemy) {
+            enemy.updateOne();
             enemy.update(dt);
         });
-        player.update();
+        players.forEach(function(player) {
+          player.update();
+          player.checkCollisions();
+        })
+
     }
 
     /* 这个函数做了一些游戏的初始渲染，然后调用 renderEntities 函数。记住，这个函数
@@ -97,30 +102,35 @@ var Engine = (function(global) {
             numCols = 5,
             row, col;
 
-        /* 便利我们上面定义的行和列，用 rowImages 数组，在各自的各个位置绘制正确的图片 */
+        /* 遍历我们上面定义的行和列，用 rowImages 数组，在各自的各个位置绘制正确的图片 */
         for (row = 0; row < numRows; row++) {
             for (col = 0; col < numCols; col++) {
                 /* 这个 canvas 上下文的 drawImage 函数需要三个参数，第一个是需要绘制的图片
                  * 第二个和第三个分别是起始点的x和y坐标。我们用我们事先写好的资源管理工具来获取
                  * 我们需要的图片，这样我们可以享受缓存图片的好处，因为我们会反复的用到这些图片
                  */
-                ctx.drawImage(Resources.get(rowImages[row]), col * 101, row * 83);
+                ctx.drawImage(Resources.get(rowImages[row]), col * 101, row * 84 );
             }
         }
 
         renderEntities();
     }
 
-    /* 这个函数会在每个时间间隙被 render 函数调用。他的目的是分别调用你在 enemy 和 player
+    /* 这个函数会在每个时间间隙被 render 函数调用。它的目的是分别调用你在 enemy 和 player
      * 对象中定义的 render 方法。
      */
     function renderEntities() {
-        /* 遍历在 allEnemies 数组中存放的作于对象然后调用你事先定义的 render 函数 */
+        /* 遍历在 allEnemies 数组中存放的对象然后调用你事先定义的 render 函数 */
         allEnemies.forEach(function(enemy) {
             enemy.render();
         });
 
-        player.render();
+        // player.render();
+        // players.forEach(function(player) {
+            player0.render();
+            player1.render();
+
+        // });
     }
 
     /* 这个函数现在没干任何事，但是这会是一个好地方让你来处理游戏重置的逻辑。可能是一个
@@ -132,7 +142,7 @@ var Engine = (function(global) {
     }
 
     /* 紧接着我们来加载我们知道的需要来绘制我们游戏关卡的图片。然后把 init 方法设置为回调函数。
-     * 那么党这些图片都已经加载完毕的时候游戏就会开始。
+     * 那么当这些图片都已经加载完毕的时候游戏就会开始。
      */
     Resources.load([
         'images/stone-block.png',
