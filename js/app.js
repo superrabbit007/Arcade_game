@@ -17,8 +17,6 @@ class Enemy {
     }
 
 
-
-
     // 当虫子跑出画面后，重置它的位置（x,y坐标），生成随机的速度
     updateOne() {
         if (this.x > 505) {
@@ -33,7 +31,6 @@ class Enemy {
     render() {
         ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
     }
-
 
 }
 
@@ -79,13 +76,9 @@ class Player {
 
     }
 
-
     render() {
-        // console.log("test render");
         ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
     }
-
-
 
 
     /**
@@ -97,22 +90,17 @@ class Player {
         switch (key) {
             case 'left':
                 this.x -= 101;
-                console.log(this.x);
                 break;
             case 'right':
                 this.x += 101;
-                console.log(this.x);
                 break;
             case 'up':
                 this.y -= 84;
-                console.log(this.y);
                 break;
             case 'down':
                 this.y += 84;
-                console.log(this.y);
                 break;
             default:
-                console.log("Please press the control key!");
         }
         //确保玩家不会走出游戏界面外（如果移动之后超出游戏界面，则立即重置玩家状态）
         var condition1 = (0 <= this.x && this.x <= 404);
@@ -136,10 +124,7 @@ class Player {
 
 
 
-// 现在实例化你的所有对象
-// 把所有敌人的对象都放进一个叫 allEnemies 的数组里面
-// 把玩家对象放进一个叫 player 的变量里面
-
+// 实例化敌人和玩家对象（enemy,player）
 let popBox = document.getElementById('pop-box');
 let gameShow = document.getElementsByTagName('body');
 let player = new Player();
@@ -175,7 +160,6 @@ function reset() {
     gameShow[0].style.cssText = "visibility: visible";
 
 }
-
 
 
 
